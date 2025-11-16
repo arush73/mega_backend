@@ -2,15 +2,33 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { addProfileSchema } from "../validators/profile.validators.js"
+import {Cohort} from "../models/cohort.model.js"
 
 const addProfile = asyncHandler(async (req, res) => {
   // Implementation for adding a profile
+
+  if (!req.user || !req.user._id) {
+    throw new ApiError(401, "Unauthorized: user not found in token")
+  }
+
   const validate = addProfileSchema.safeParse(req.body)
   if (!validate.success)
     throw new ApiError(
       401,
       validate.error.issues.map((m) => m.message)
     )
+  
+  // check whether user is in a cohort or not
+  const cohortId = req.body.cohort
+  if (cohortId) {
+    // logic to verify cohort existence can be added here
+    const cohortExists = await Cohort.findById(cohortId) // placeholder
+    if (!cohortExists) {
+      throw new ApiError(400, "Cohort does not exist")
+    }
+  }
+  
+
   
   
   return res
