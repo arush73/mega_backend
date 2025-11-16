@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import { ChatEventEnum } from "../../../constants.js";
-import { Chat } from "../../../models/apps/chat-app/chat.models.js";
-import { ChatMessage } from "../../../models/apps/chat-app/message.models.js";
-import { emitSocketEvent } from "../../../socket/index.js";
-import { ApiError } from "../../../utils/ApiError.js";
-import { ApiResponse } from "../../../utils/ApiResponse.js";
-import { asyncHandler } from "../../../utils/asyncHandler.js";
+import { ChatEventEnum } from "../constants.js";
+import { Chat } from "../models/chat.models.js";
+import { ChatMessage } from "../models/message.models.js";
+import { emitSocketEvent } from "../socket/index.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import {
   getLocalPath,
   getStaticFilePath,

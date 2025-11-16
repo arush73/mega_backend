@@ -1,9 +1,18 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
+import { addProfileSchema } from "../validators/profile.validators.js"
 
 const addProfile = asyncHandler(async (req, res) => {
   // Implementation for adding a profile
+  const validate = addProfileSchema.safeParse(req.body)
+  if (!validate.success)
+    throw new ApiError(
+      401,
+      validate.error.issues.map((m) => m.message)
+    )
+  
+  
   return res
     .status(201)
     .json(
@@ -13,6 +22,12 @@ const addProfile = asyncHandler(async (req, res) => {
 
 const updateProfile = asyncHandler(async (req, res) => {
   // Implementation for updating a profile
+  const validate = updateProfileSchema.safeParse(req.body)
+  if (!validate.success)
+    throw new ApiError(
+      401,
+      validate.error.issues.map((m) => m.message)
+    )
   return res
     .status(200)
     .json(
