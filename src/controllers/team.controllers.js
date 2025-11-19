@@ -5,13 +5,15 @@ import { ApiError } from "../utils/ApiError.js"
 const getTeams = asyncHandler(async (req, res) => {
   // Logic to get teams would go here
   const teams = [] // Placeholder for team data
-  res.json(new ApiResponse("Teams fetched successfully", teams))
+  return res.json(new ApiResponse("Teams fetched successfully", teams))
 })
 
 const createTeam = asyncHandler(async (req, res) => {
   // Logic to create a team would go here
   const team = req.body // Placeholder for created team data
-  res.status(201).json(new ApiResponse(201, team, "Team created successfully"))
+  return res
+    .status(201)
+    .json(new ApiResponse(201, team, "Team created successfully"))
 })
 
 const addMemberToTeam = asyncHandler(async (req, res) => {
@@ -31,7 +33,7 @@ const addMemberToTeam = asyncHandler(async (req, res) => {
 const removeMemberFromTeam = asyncHandler(async (req, res) => {
   const { teamId, memberId } = req.params
   // Logic to remove member from team would go here
-  res
+  return res
     .status(200)
     .json(
       new ApiResponse(
@@ -45,7 +47,7 @@ const removeMemberFromTeam = asyncHandler(async (req, res) => {
 const deleteTeam = asyncHandler(async (req, res) => {
   const { teamId } = req.params
   // Logic to delete team would go here
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, {}, `Team ${teamId} deleted successfully`))
 })
