@@ -4,5 +4,39 @@ team builder saas
 
 models 
 
-user 
-profile 
+    user 
+    profile 
+
+controllers
+
+    auth
+        /register - working fine
+            POST req
+                email 
+                password
+
+        /login - working fine
+            POST req
+                email
+                password
+
+        /logout - working fine
+            POST req
+
+        /refersh-token = working fine
+            POST req
+        /verify-email - 
+
+        /change-password - working fine
+            POST req
+                oldPassword 
+                newPassword
+
+        /current-user -
+            GET req
+
+        /avatar -
+            PATCH req
+        
+        /google sso - 
+        /github sso - 

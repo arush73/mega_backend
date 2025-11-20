@@ -1,4 +1,4 @@
-export const DB_NAME = "project_1"
+export const DB_NAME = "team_builder_saas"
 
 export const UserRolesEnum = {
   ADMIN: "ADMIN",

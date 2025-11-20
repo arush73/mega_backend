@@ -18,12 +18,13 @@ import crypto from "crypto"
 import { uploadCloudinary } from "../utils/cloudinary.js"
 import jwt from "jsonwebtoken"
 import axios from "axios"
+import { access } from "fs"
 
 const cookieOptions = () => {
   return {
     httpOnly: true,
     secure: true,
-    sameSite: "none",
+    sameSite: "strict",
   }
 }
 
@@ -64,16 +65,17 @@ const registerUser = asyncHandler(async (req, res) => {
   const accessToken = user.generateAccessToken()
   const refreshToken = user.generateRefreshToken()
 
-  axios.post(
-    process.env.MAIL_SERVICE_URL +
-      "/verify-email/" +
-      unHashedToken +
-      "/" +
-      process.env.MAIL_SERVICE_TOKEN,
-    {
-      email: user.email,
-    }
-  )
+  // will have to uncommet later currently not working due to internet error
+  // axios.post(
+  //   process.env.MAIL_SERVICE_URL +
+  //     "/verify-email/" +
+  //     unHashedToken +
+  //     "/" +
+  //     process.env.MAIL_SERVICE_TOKEN,
+  //   {
+  //     email: user.email,
+  //   }
+  // )
 
   return res
     .status(201)
@@ -125,6 +127,10 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const accessToken = user.generateAccessToken()
   const refreshToken = user.generateRefreshToken()
+
+  console.log("tokens generated on login: ")
+  console.log("Access Token: ", accessToken)
+  console.log("Refres Token: ", refreshToken)
 
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
