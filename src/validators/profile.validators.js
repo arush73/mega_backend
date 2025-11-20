@@ -1,78 +1,79 @@
 import { z } from "zod"
+import mongoose from "mongoose"
 
-// Utility: MongoDB ObjectId validator
-const objectId = z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")
+// Helper to validate MongoDB ObjectId
+const objectIdSchema = z
+  .string()
+  .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+    message: "Invalid MongoDB ObjectId",
+  })
 
-// Basic string
-const str = z.string().trim().optional()
-const urlStr = z.string().url().optional()
-
-// Project item schema
-const projectSchema = z.object({
-  name: z.string().optional(),
-  description: z.string().optional(),
-  url: z.string().url().optional(),
-  role: z.string().optional(),
-})
-
-// Experience schema
-const experienceSchema = z.object({
-  years: z.number().min(0).optional(),
-  summary: z.string().optional(),
-})
-
-// Social links schema
-const socialSchema = z.object({
-  github: urlStr,
-  linkedin: urlStr,
-  website: urlStr,
-  twitter: urlStr,
-})
-
-// Preferences schema
-const preferencesSchema = z.object({
-  preferredRoles: z.array(z.string()).optional(),
-  preferredTeamSize: z.number().default(4).optional(),
-  willingToLead: z.boolean().default(false).optional(),
-})
-
-// Main Profile validator
-export const addProfileSchema = z.object({
-  // Required on create
-  user: objectId,
+const profileValidationSchema = z.object({
+  user: objectIdSchema, // required (from auth or body)
 
   // Basic identity
-  fullName: str,
-  displayName: str,
-  pronouns: str,
-  title: str,
+  fullName: z.string().trim().optional(),
+  displayName: z.string().trim().optional(),
+  pronouns: z.string().trim().optional(),
+  title: z.string().trim().optional(),
   bio: z.string().optional(),
 
   // Cohort
-  cohort: objectId.optional(),
+  cohort: objectIdSchema.optional(),
 
-  // Skills, roles, experience
+  // Skills and roles
   skills: z.array(z.string()).optional(),
   roles: z.array(z.string()).optional(),
-  experience: experienceSchema.optional(),
+
+  // Experience
+  experience: z
+    .object({
+      years: z.number().min(0).optional(),
+      summary: z.string().optional(),
+    })
+    .optional(),
 
   // Projects
-  projects: z.array(projectSchema).optional(),
+  projects: z
+    .array(
+      z.object({
+        name: z.string().optional(),
+        description: z.string().optional(),
+        url: z.string().url().optional(),
+        role: z.string().optional(),
+      })
+    )
+    .optional(),
 
-  // Social
-  social: socialSchema.optional(),
+  // Social links
+  social: z
+    .object({
+      github: z.string().url().optional(),
+      linkedin: z.string().url().optional(),
+      website: z.string().url().optional(),
+      twitter: z.string().url().optional(),
+    })
+    .optional(),
 
   // Preferences
-  preferences: preferencesSchema.optional(),
+  preferences: z
+    .object({
+      preferredRoles: z.array(z.string()).optional(),
+      preferredTeamSize: z.number().min(1).default(4).optional(),
+      willingToLead: z.boolean().default(false).optional(),
+    })
+    .optional(),
 
   // Availability
-  availability: z.enum(["available", "busy", "maybe"]).optional(),
+  availability: z
+    .enum(["available", "busy", "maybe"])
+    .default("available")
+    .optional(),
 
   // Presentation
-  avatarUrl: urlStr,
+  avatarUrl: z.string().url().optional(),
 })
 
-// For update -> everything optional
-export const updateProfileSchema = profileZodSchema
-  .omit({ user: true })
-  .partial()
+export {
+  profileValidationSchema
+}

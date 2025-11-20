@@ -17,7 +17,7 @@ const profileSchema = new mongoose.Schema(
     bio: { type: String },
 
     // Cohort / program links
-    cohort: { type: mongoose.Schema.Types.ObjectId, ref: "Cohort" },
+    cohort: [{ type: mongoose.Schema.Types.ObjectId, ref: "Cohort" }],
 
     // Skills, roles and experience
     skills: [{ type: String }],
