@@ -6,18 +6,31 @@ import logger from "./logger/winston.logger.js"
 import app from "./app.js"
 
 const startServer = () => {
-  app.listen(process.env.PORT || 8080, () => {
+  httpServer.listen(process.env.PORT || 8080, () => {
     logger.info(
-      `📑 visit the server at: http://localhost:${process.env.PORT || 8080}`
-    )
-    logger.info("⚙️  Server is running on port: " + process.env.PORT)
-  })
-}
+      `📑 Visit the documentation at: http://localhost:${
+        process.env.PORT || 8080
+      }`
+    );
+    logger.info("⚙️  Server is running on port: " + process.env.PORT);
+  });
+};
 
-connectDB()
-  .then(() => {
-    startServer()
-  })
-  .catch((err) => {
-    logger.error("Mongo db connect error: ", err)
-  })
+const majorNodeVersion = +process.env.NODE_VERSION?.split(".")[0] || 0;
+
+if (majorNodeVersion >= 14) {
+  try {
+    await connectDB();
+    startServer();
+  } catch (err) {
+    logger.error("Mongo db connect error: ", err);
+  }
+} else {
+  connectDB()
+    .then(() => {
+      startServer();
+    })
+    .catch((err) => {
+      logger.error("Mongo db connect error: ", err);
+    });
+}

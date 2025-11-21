@@ -1,9 +1,13 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { ApiError } from "../utils/ApiError.js"
+import { teamValidationSchema } from "../validators/team.validators.js"
 
 const getTeams = asyncHandler(async (req, res) => {
   // Logic to get teams would go here
+
+  const { name, description, startDate, endDate, isActive, members } = req.body
+
   const teams = [] // Placeholder for team data
   return res.json(new ApiResponse("Teams fetched successfully", teams))
 })

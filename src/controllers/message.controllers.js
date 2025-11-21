@@ -1,16 +1,11 @@
 import mongoose from "mongoose"
 import { ChatEventEnum } from "../constants.js"
 import { Chat } from "../models/chat.models.js"
-import { ChatMessage } from "../models/message.models.js"
+import { Message } from "../models/message.models.js"
 import { emitSocketEvent } from "../socket/index.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-import {
-  getLocalPath,
-  getStaticFilePath,
-  removeLocalFile,
-} from "../../../utils/helpers.js"
 
 /**
  * @description Utility function which returns the pipeline stages to structure the chat message schema with common lookups
@@ -57,7 +52,7 @@ const getAllMessages = asyncHandler(async (req, res) => {
     throw new ApiError(400, "User is not a part of this chat")
   }
 
-  const messages = await ChatMessage.aggregate([
+  const messages = await Message.aggregate([
     {
       $match: {
         chat: new mongoose.Types.ObjectId(chatId),
@@ -102,7 +97,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   }
 
   // Create a new message instance with appropriate metadata
-  const message = await ChatMessage.create({
+  const message = await Message.create({
     sender: new mongoose.Types.ObjectId(req.user._id),
     content: content || "",
     chat: new mongoose.Types.ObjectId(chatId),
@@ -121,7 +116,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   )
 
   // structure the message
-  const messages = await ChatMessage.aggregate([
+  const messages = await Message.aggregate([
     {
       $match: {
         _id: new mongoose.Types.ObjectId(message._id),
@@ -173,7 +168,7 @@ const deleteMessage = asyncHandler(async (req, res) => {
   }
 
   //Find the message based on message id
-  const message = await ChatMessage.findOne({
+  const message = await Message.findOne({
     _id: new mongoose.Types.ObjectId(messageId),
   })
 
@@ -195,13 +190,13 @@ const deleteMessage = asyncHandler(async (req, res) => {
     })
   }
   //deleting the message from DB
-  await ChatMessage.deleteOne({
+  await Message.deleteOne({
     _id: new mongoose.Types.ObjectId(messageId),
   })
 
   //Updating the last message of the chat to the previous message after deletion if the message deleted was last message
   if (chat.lastMessage.toString() === message._id.toString()) {
-    const lastMessage = await ChatMessage.findOne(
+    const lastMessage = await Message.findOne(
       { chat: chatId },
       {},
       { sort: { createdAt: -1 } }

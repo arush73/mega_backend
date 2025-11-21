@@ -11,17 +11,17 @@ const chatSchema = new mongoose.Schema(
       default: false,
     },
     lastMessage: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "ChatMessage",
     },
     participants: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
     ],
     admin: {
-      type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   },

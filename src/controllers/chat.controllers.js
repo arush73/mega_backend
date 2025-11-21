@@ -2,12 +2,12 @@ import mongoose from "mongoose"
 import { ChatEventEnum } from "../constants.js"
 import { User } from "../models/user.models.js"
 import { Chat } from "../models/chat.models.js"
-import { ChatMessage } from "../models/message.models.js"
+import { Message } from "../models/message.models.js"
 import { emitSocketEvent } from "../socket/index.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { removeLocalFile } from "../utils/helpers.js"
+
 
 /**
  * @description Utility function which returns the pipeline stages to structure the chat schema with common lookups
@@ -85,7 +85,7 @@ const chatCommonAggregation = () => {
  */
 const deleteCascadeChatMessages = async (chatId) => {
   // fetch the messages associated with the chat to remove
-  const messages = await ChatMessage.find({
+  const messages = await Message.find({
     chat: new mongoose.Types.ObjectId(chatId),
   })
 
@@ -104,7 +104,7 @@ const deleteCascadeChatMessages = async (chatId) => {
   })
 
   // delete all the messages
-  await ChatMessage.deleteMany({
+  await Message.deleteMany({
     chat: new mongoose.Types.ObjectId(chatId),
   })
 }
