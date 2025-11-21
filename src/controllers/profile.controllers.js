@@ -117,7 +117,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     avatarUrl,
   })
 
-  if (!updateProfile) throw new ApiError(500, "failed to update the profile")
+  if (!updatedProfile) throw new ApiError(500, "failed to update the profile")
 
   return res.status(200).json(
     new ApiResponse(
@@ -133,7 +133,10 @@ const updateProfile = asyncHandler(async (req, res) => {
 const deleteProfile = asyncHandler(async (req, res) => {
   const profileId = req.params
   if (!profileId) throw new ApiError(404, "profileId not found in the params")
-
+  
+  const deleteProfile = Profile.findByIdAndDelete(profileId)
+  if(!deleteProfile) throw new ApiError(500,"failed to delete the profile")
+    
   return res
     .status(200)
     .json(new ApiResponse(200, null, "Profile deleted successfully"))
