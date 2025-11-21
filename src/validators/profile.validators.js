@@ -74,6 +74,4 @@ const profileValidationSchema = z.object({
   avatarUrl: z.string().url().optional(),
 })
 
-export {
-  profileValidationSchema
-}
+export { profileValidationSchema }

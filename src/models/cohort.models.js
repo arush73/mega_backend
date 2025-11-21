@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const cohortSchema = new mongoose.Schema(
   {
@@ -10,7 +10,6 @@ const cohortSchema = new mongoose.Schema(
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
-);
+)
 
-export const Cohort = mongoose.model("Cohort", cohortSchema);
-
+export const Cohort = mongoose.model("Cohort", cohortSchema)

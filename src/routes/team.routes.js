@@ -1,15 +1,13 @@
-import { Router } from "express";
+import { Router } from "express"
 
-const router = Router();
+const router = Router()
 
-import 
-    {
+import {
   getTeams,
   createTeam,
   addMemberToTeam,
   removeMemberFromTeam,
   deleteTeam,
-} from "../controllers/team.controllers.js";
+} from "../controllers/team.controllers.js"
 
-
-export default router;
+export default router

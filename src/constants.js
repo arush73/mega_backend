@@ -25,7 +25,12 @@ export const problemDifficulty = {
 
 export const AvailableProblemDifficulty = Object.values(problemDifficulty)
 
-export const LanguageCode = { 71: "PYTHON", 63: "JAVASCRIPT", 62: "JAVA", 54: "C++" }
+export const LanguageCode = {
+  71: "PYTHON",
+  63: "JAVASCRIPT",
+  62: "JAVA",
+  54: "C++",
+}
 
 export const AvailableLanguages = Object.values(LanguageCode)
 
@@ -55,7 +60,6 @@ export const ChatEventEnum = Object.freeze({
   TYPING_EVENT: "typing",
   // ? when message is deleted
   MESSAGE_DELETE_EVENT: "messageDeleted",
-});
+})
 
 export const AvailableChatEvents = Object.values(ChatEventEnum)
-

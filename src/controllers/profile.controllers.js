@@ -133,10 +133,10 @@ const updateProfile = asyncHandler(async (req, res) => {
 const deleteProfile = asyncHandler(async (req, res) => {
   const profileId = req.params
   if (!profileId) throw new ApiError(404, "profileId not found in the params")
-  
+
   const deleteProfile = Profile.findByIdAndDelete(profileId)
-  if(!deleteProfile) throw new ApiError(500,"failed to delete the profile")
-    
+  if (!deleteProfile) throw new ApiError(500, "failed to delete the profile")
+
   return res
     .status(200)
     .json(new ApiResponse(200, null, "Profile deleted successfully"))
@@ -168,12 +168,11 @@ const addCohortToProfile = asyncHandler(async (req, res) => {
 
   const profile = await Profile.findById(profileId)
   if (!profile) throw new ApiError(404, "failed to find profile")
-  
+
   const cohort = req.body.cohort
-  if (!cohort ) throw new ApiError(404, "provide cohort details in the req")
+  if (!cohort) throw new ApiError(404, "provide cohort details in the req")
 
   if (cohort.length === 0) throw new ApiError(404, "cohort is empty")
-
 
   const updatedCohortProfile = await Cohort.findByIdAndUpdate(cohortId)
   return res.status(201).json(new ApiResponse(201, updatedCohortProfile))

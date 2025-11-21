@@ -16,7 +16,8 @@ try {
   passport.deserializeUser(async (id, next) => {
     try {
       const user = await User.findById(id)
-      if (user) next(null, user) // return user of exist
+      if (user)
+        next(null, user) // return user of exist
       else next(new ApiError(404, "User does not exist"), null) // throw an error if user does not exist
     } catch (error) {
       next(
@@ -37,9 +38,18 @@ try {
         callbackURL: process.env.GOOGLE_CALLBACK_URL,
       },
       async (_, __, profile, next) => {
-        console.log("These are the shitty shits: ", process.env.GOOGLE_CLIENT_ID)
-        console.log("These are the shitty shits: ", process.env.GOOGLE_CLIENT_SECRET)
-        console.log("These are the shitty shits: ", process.env.GOOGLE_CALLBACK_URL)
+        console.log(
+          "These are the shitty shits: ",
+          process.env.GOOGLE_CLIENT_ID
+        )
+        console.log(
+          "These are the shitty shits: ",
+          process.env.GOOGLE_CLIENT_SECRET
+        )
+        console.log(
+          "These are the shitty shits: ",
+          process.env.GOOGLE_CALLBACK_URL
+        )
         const user = await User.findOne({ email: profile._json.email })
         if (user) {
           if (user.loginType !== UserLoginType.GOOGLE) {
