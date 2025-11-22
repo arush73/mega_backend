@@ -17,13 +17,21 @@ export const UserLoginType = {
 
 export const AvailableSocialLogins = Object.values(UserLoginType)
 
-export const problemDifficulty = {
-  EASY: "EASY",
-  MEDIUM: "MEDIUM",
-  HARD: "HARD",
+export const TeamJoinRequestStatus = {
+    PENDING: "PENDING",
+    ACCEPTED: "ACCEPTED",
+    REJECTED: "REJECTED"
 }
 
-export const AvailableProblemDifficulty = Object.values(problemDifficulty)
+export const AvailableTeamJoinRequestStatus = Object.values(TeamJoinRequestStatus)
+
+export const FeedbackType = {
+    FEEDBACK: "FEEDBACK",
+    SUGGESTION: "SUGGESTION",
+    BUG: "BUG",
+}
+
+export const AvailableFeedbackStatus = Object.values(FeedbackStatus)
 
 export const LanguageCode = {
   71: "PYTHON",
