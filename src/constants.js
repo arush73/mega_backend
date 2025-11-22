@@ -33,7 +33,7 @@ export const FeedbackType = {
   BUG: "BUG",
 }
 
-export const AvailableFeedbackStatus = Object.values(FeedbackStatus)
+export const AvailableFeedbackType = Object.values(FeedbackType)
 
 export const LanguageCode = {
   71: "PYTHON",
