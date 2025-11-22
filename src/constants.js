@@ -18,17 +18,19 @@ export const UserLoginType = {
 export const AvailableSocialLogins = Object.values(UserLoginType)
 
 export const TeamJoinRequestStatus = {
-    PENDING: "PENDING",
-    ACCEPTED: "ACCEPTED",
-    REJECTED: "REJECTED"
+  PENDING: "PENDING",
+  ACCEPTED: "ACCEPTED",
+  REJECTED: "REJECTED",
 }
 
-export const AvailableTeamJoinRequestStatus = Object.values(TeamJoinRequestStatus)
+export const AvailableTeamJoinRequestStatus = Object.values(
+  TeamJoinRequestStatus
+)
 
 export const FeedbackType = {
-    FEEDBACK: "FEEDBACK",
-    SUGGESTION: "SUGGESTION",
-    BUG: "BUG",
+  FEEDBACK: "FEEDBACK",
+  SUGGESTION: "SUGGESTION",
+  BUG: "BUG",
 }
 
 export const AvailableFeedbackStatus = Object.values(FeedbackStatus)

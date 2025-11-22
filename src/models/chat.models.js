@@ -21,7 +21,7 @@ const chatSchema = new mongoose.Schema(
       },
     ],
     admin: {
-        type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   },

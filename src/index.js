@@ -12,26 +12,26 @@ const startServer = () => {
       `📑 Visit the documentation at: http://localhost:${
         process.env.PORT || 8080
       }`
-    );
-    logger.info("⚙️  Server is running on port: " + process.env.PORT);
-  });
-};
+    )
+    logger.info("⚙️  Server is running on port: " + process.env.PORT)
+  })
+}
 
-const majorNodeVersion = +process.env.NODE_VERSION?.split(".")[0] || 0;
+const majorNodeVersion = +process.env.NODE_VERSION?.split(".")[0] || 0
 
 if (majorNodeVersion >= 14) {
   try {
-    await connectDB();
-    startServer();
+    await connectDB()
+    startServer()
   } catch (err) {
-    logger.error("Mongo db connect error: ", err);
+    logger.error("Mongo db connect error: ", err)
   }
 } else {
   connectDB()
     .then(() => {
-      startServer();
+      startServer()
     })
     .catch((err) => {
-      logger.error("Mongo db connect error: ", err);
-    });
+      logger.error("Mongo db connect error: ", err)
+    })
 }

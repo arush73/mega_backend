@@ -13,7 +13,7 @@ import { createServer } from "http"
 
 const app = express()
 
-export const httpServer = createServer(app);
+export const httpServer = createServer(app)
 
 const io = new Server(httpServer, {
   pingTimeout: 60000,
@@ -21,9 +21,9 @@ const io = new Server(httpServer, {
     origin: process.env.CORS_ORIGIN,
     credentials: true,
   },
-});
+})
 
-app.set("io",io)
+app.set("io", io)
 
 app.use(express.json({ limit: "16kb" }))
 app.use(express.urlencoded({ extended: true, limit: "16kb" }))

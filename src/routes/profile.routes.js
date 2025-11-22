@@ -6,17 +6,23 @@ const router = Router()
 
 router.use(verifyJWT)
 
-import {  addProfile,
+import {
+  addProfile,
   updateProfile,
   deleteProfile,
   getProfile,
   listProfiles,
-  addCohortToProfile, 
+  addCohortToProfile,
 } from "../controllers/profile.controllers.js"
 
-
 router.route("/").post(addProfile).get(listProfiles)
-router.route("/:profileId").get(getProfile).put(updateProfile).delete(deleteProfile)
-router.route("/:profileId/cohort").post(verifyRole(UserRolesEnum.ADMIN),addCohortToProfile)
+router
+  .route("/:profileId")
+  .get(getProfile)
+  .put(updateProfile)
+  .delete(deleteProfile)
+router
+  .route("/:profileId/cohort")
+  .post(verifyRole(UserRolesEnum.ADMIN), addCohortToProfile)
 
 export default router

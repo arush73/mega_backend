@@ -16,6 +16,10 @@ import {
 } from "../controllers/team.controllers.js"
 
 router.route("/").get(getTeams).post(createTeam)
-router.route("/:teamId").put(addMemberToTeam).delete(removeMemberFromTeam).delete(deleteTeam)
+router
+  .route("/:teamId")
+  .put(addMemberToTeam)
+  .delete(removeMemberFromTeam)
+  .delete(deleteTeam)
 
 export default router
