@@ -128,10 +128,6 @@ const loginUser = asyncHandler(async (req, res) => {
   const accessToken = user.generateAccessToken()
   const refreshToken = user.generateRefreshToken()
 
-  console.log("tokens generated on login: ")
-  console.log("Access Token: ", accessToken)
-  console.log("Refres Token: ", refreshToken)
-
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
   )
@@ -143,13 +139,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .status(200)
     .cookie("accessToken", accessToken, cookieOptions())
     .cookie("refreshToken", refreshToken, cookieOptions())
-    .json(
-      new ApiResponse(200, "User logged in successfully", {
-        user: loggedInUser,
-        accessToken,
-        refreshToken,
-      })
-    )
+    .json(new ApiResponse(200, loggedInUser, "User logged in successfully"))
 })
 
 const logoutUser = asyncHandler(async (req, res) => {
