@@ -13,7 +13,7 @@ import { createServer } from "http"
 
 const app = express()
 
-const httpServer = createServer(app);
+export const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   pingTimeout: 60000,
@@ -73,6 +73,9 @@ import healthcheckRouter from "./routes/healthCheck.routes.js"
 import authRouter from "./routes/auth.routes.js"
 import chatRouter from "./routes/chat.routes.js"
 import messageRouter from "./routes/message.routes.js"
+import cohortRouter from "./routes/cohort.routes.js"
+import profileRouter from "./routes/profile.routes.js"
+import teamRouter from "./routes/team.routes.js"
 
 // decalring routes
 app.get("/", (_, res) => {
@@ -82,7 +85,12 @@ app.get("/", (_, res) => {
 app.use("/api/v1/healthcheck", healthcheckRouter)
 app.use("/api/v1/auth", authRouter)
 
+app.use("/api/v1/profile", profileRouter)
+
 app.use("/api/v1/chat-app/chats", chatRouter)
 app.use("/api/v1/chat-app/messages", messageRouter)
+
+app.use("/api/v1/cohort", cohortRouter)
+app.use("/api/v1/team", teamRouter)
 
 export default app

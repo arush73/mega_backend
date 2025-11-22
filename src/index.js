@@ -4,6 +4,7 @@ dotenv.config()
 import connectDB from "./utils/db.js"
 import logger from "./logger/winston.logger.js"
 import app from "./app.js"
+import { httpServer } from "./app.js"
 
 const startServer = () => {
   httpServer.listen(process.env.PORT || 8080, () => {
