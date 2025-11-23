@@ -10,7 +10,6 @@ import {
 } from "../validators/auth.validators.js"
 import { UserRolesEnum, UserLoginType } from "../constants.js"
 import {
-  emailVerificationMailgenContent,
   forgotPasswordMailgenContent,
   sendMail,
 } from "../utils/mail.js"
@@ -18,7 +17,6 @@ import crypto from "crypto"
 import { uploadCloudinary } from "../utils/cloudinary.js"
 import jwt from "jsonwebtoken"
 import axios from "axios"
-import { access } from "fs"
 
 const cookieOptions = () => {
   return {
@@ -65,17 +63,16 @@ const registerUser = asyncHandler(async (req, res) => {
   const accessToken = user.generateAccessToken()
   const refreshToken = user.generateRefreshToken()
 
-  // will have to uncommet later currently not working due to internet error
-  // axios.post(
-  //   process.env.MAIL_SERVICE_URL +
-  //     "/verify-email/" +
-  //     unHashedToken +
-  //     "/" +
-  //     process.env.MAIL_SERVICE_TOKEN,
-  //   {
-  //     email: user.email,
-  //   }
-  // )
+  axios.post(
+    process.env.MAIL_SERVICE_URL +
+      "/verify-email/" +
+      unHashedToken +
+      "/" +
+      process.env.MAIL_SERVICE_TOKEN,
+    {
+      email: user.email,
+    }
+  )
 
   return res
     .status(201)
@@ -336,7 +333,7 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email })
 
   if (!user) throw new ApiError(404, "User does not exists", [])
-
+  
   const { unHashedToken, hashedToken, tokenExpiry } =
     user.generateTemporaryToken()
 
@@ -344,18 +341,32 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
   user.forgotPasswordExpiry = tokenExpiry
   await user.save({ validateBeforeSave: false })
 
-  console.log(
-    await sendMail({
-      email: user?.email,
-      subject: "Password reset request",
-      mailgenContent: forgotPasswordMailgenContent(
-        user.username,
-        // ! NOTE: Following link should be the link of the frontend page responsible to request password reset
-        // ! Frontend will send the below token with the new password in the request body to the backend reset password endpoint
-        `${process.env.FORGOT_PASSWORD_REDIRECT_URL}/${unHashedToken}`
-      ),
-    })
+  // console.log(
+  //   await sendMail({
+  //     email: user?.email,
+  //     subject: "Password reset request",
+  //     mailgenContent: forgotPasswordMailgenContent(
+  //       user.username,
+  //       // ! NOTE: Following link should be the link of the frontend page responsible to request password reset
+  //       // ! Frontend will send the below token with the new password in the request body to the backend reset password endpoint
+  //       `${process.env.FORGOT_PASSWORD_REDIRECT_URL}/${unHashedToken}`
+  //     ),
+  //   })
+  // )
+
+  axios.post(
+    process.env.MAIL_SERVICE_URL +
+      "/forgot-password/" +
+      unHashedToken +
+      "/" +
+      process.env.MAIL_SERVICE_TOKEN,
+    {
+      email: user.email,
+    }
   )
+
+
+
   return res
     .status(200)
     .json(
@@ -386,6 +397,8 @@ const resetForgottenPassword = asyncHandler(async (req, res) => {
   })
 
   if (!user) throw new ApiError(489, "Token is invalid or expired")
+  
+  if(user.isPasswordCorrect(newPassword)) throw new ApiError(401, "New password cannot be same as the previous password")
 
   user.forgotPasswordToken = undefined
   user.forgotPasswordExpiry = undefined
@@ -406,6 +419,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     )
 
   const { oldPassword, newPassword } = req.body
+  if(oldPassword === newPassword) throw new ApiError(401, "New password cannot be same as the previous password")
 
   const user = await User.findById(req.user?._id)
 
