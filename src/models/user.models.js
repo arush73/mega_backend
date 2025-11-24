@@ -64,6 +64,22 @@ const userSchema = new mongoose.Schema(
       enum: AvailableSocialLogins,
       default: UserLoginType.EMAIL_PASSWORD,
     },
+    profile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+    },
+    cohort: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cohort",
+      },
+    ],
+    teams: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Team",
+      },
+    ],
   },
   { timestamps: true }
 )
