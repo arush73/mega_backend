@@ -1,5 +1,8 @@
 import mongoose from "mongoose"
-import { AvailableUserPronouns, AvailableProfileAvailability } from "../constants.js"
+import {
+  AvailableUserPronouns,
+  AvailableProfileAvailability,
+} from "../constants.js"
 
 const profileSchema = new mongoose.Schema(
   {
@@ -13,7 +16,11 @@ const profileSchema = new mongoose.Schema(
     // Basic identity
     fullName: { type: String, trim: true },
     displayName: { type: String, trim: true },
-    pronouns: { type: String, enum: AvailableUserPronouns, default: "HE/HIM/HIS" },
+    pronouns: {
+      type: String,
+      enum: AvailableUserPronouns,
+      default: "HE/HIM/HIS",
+    },
     title: { type: String, trim: true },
     bio: { type: String, trim: true, maxLength: 1000, minLength: 10 },
 

@@ -114,7 +114,6 @@ try {
             next(null, user)
           }
         } else {
-
           console.log("Ye mil tha ha bhenchod github se, ", profile)
           console.log("Ye mil tha ha bhenchod github sea, ", profile._json)
           if (!profile._json.email) {
@@ -146,7 +145,13 @@ try {
             if (createdUser) {
               next(null, createdUser)
             } else {
-              next(new ApiError(500, "Error while registering the user using github SSO"), null)
+              next(
+                new ApiError(
+                  500,
+                  "Error while registering the user using github SSO"
+                ),
+                null
+              )
             }
           }
         }

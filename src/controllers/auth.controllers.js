@@ -9,14 +9,12 @@ import {
   resetForgottenPasswordSchema,
 } from "../validators/auth.validators.js"
 import { UserRolesEnum, UserLoginType } from "../constants.js"
-import {
-  forgotPasswordMailgenContent,
-  sendMail,
-} from "../utils/mail.js"
+import { forgotPasswordMailgenContent, sendMail } from "../utils/mail.js"
 import crypto from "crypto"
 import { uploadCloudinary } from "../utils/cloudinary.js"
 import jwt from "jsonwebtoken"
 import axios from "axios"
+import { Cohort } from "../models/cohort.models.js"
 
 const cookieOptions = () => {
   return {
@@ -68,11 +66,11 @@ const registerUser = asyncHandler(async (req, res) => {
       process.env.MAIL_SERVICE_URL +
         "/verify-email/" +
         unHashedToken +
-      "/" +
-      process.env.MAIL_SERVICE_TOKEN,
-    {
-      email: user.email,
-    }
+        "/" +
+        process.env.MAIL_SERVICE_TOKEN,
+      {
+        email: user.email,
+      }
     )
   } catch (error) {
     console.log(error)
@@ -337,7 +335,7 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email })
 
   if (!user) throw new ApiError(404, "User does not exists", [])
-  
+
   const { unHashedToken, hashedToken, tokenExpiry } =
     user.generateTemporaryToken()
 
@@ -369,8 +367,6 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
     }
   )
 
-
-
   return res
     .status(200)
     .json(
@@ -401,8 +397,12 @@ const resetForgottenPassword = asyncHandler(async (req, res) => {
   })
 
   if (!user) throw new ApiError(489, "Token is invalid or expired")
-  
-  if(user.isPasswordCorrect(newPassword)) throw new ApiError(401, "New password cannot be same as the previous password")
+
+  if (user.isPasswordCorrect(newPassword))
+    throw new ApiError(
+      401,
+      "New password cannot be same as the previous password"
+    )
 
   user.forgotPasswordToken = undefined
   user.forgotPasswordExpiry = undefined
@@ -423,7 +423,11 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     )
 
   const { oldPassword, newPassword } = req.body
-  if(oldPassword === newPassword) throw new ApiError(401, "New password cannot be same as the previous password")
+  if (oldPassword === newPassword)
+    throw new ApiError(
+      401,
+      "New password cannot be same as the previous password"
+    )
 
   const user = await User.findById(req.user?._id)
 

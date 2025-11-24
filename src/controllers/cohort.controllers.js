@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { Cohort } from "../models/cohort.models.js"
 import { addCohortSchema } from "../validators/cohort.validators.js"
+import { CohortMembers } from "../models/cohortMembers.models.js"
 
 const addCohort = asyncHandler(async (req, res) => {
   const validate = addCohortSchema.safeParse(req.body)
@@ -84,6 +85,27 @@ const listCohorts = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, cohorts, "Cohorts retrieved successfully"))
+})
+
+const addMemberToCohort = asyncHandler(async (req, res) => {
+  const { cohortId } = req.params
+  const { memberId } = req.body
+
+  const cohort = await Cohort.findById(cohortId)
+  if (!cohort) throw new ApiError(404, "Cohort not found")
+
+  const member = await User.findById(memberId)
+  if (!member) throw new ApiError(404, "User not found")
+
+  cohort.members.push(memberId)
+  await cohort.save()
+
+  member.cohort.push(cohortId)
+  await member.save()
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, cohort, "Member added to cohort successfully"))
 })
 
 export { addCohort, updateCohort, deleteCohort, getCohort, listCohorts }

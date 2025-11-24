@@ -8,7 +8,9 @@ import { User } from "../models/user.models.js"
 const getTeams = asyncHandler(async (req, res) => {
   //logic to get teams will have to think about it
 
-  return res.status(200).json(new ApiResponse(200, {},"Team created successfully"))
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Team created successfully"))
 })
 
 const createTeam = asyncHandler(async (req, res) => {
@@ -21,15 +23,24 @@ const createTeam = asyncHandler(async (req, res) => {
 
   const { name, description, startDate, endDate, isActive, members } = req.body
 
-const team = await Team.create({
-  name,
-  description,
-  startDate,
-  endDate,
-  isActive,
-  members,
-})
+  const team = await Team.create({
+    name,
+    description,
+    startDate,
+    endDate,
+    isActive,
+    members,
+  })
   if (!team) throw new ApiError(500, "failed to create team")
+
+  for (const memberId of members) {
+    const member = await User.findById(memberId)
+    if (!member) throw new ApiError(404, "Member not found")
+    const updateMemberInTeam = member.teams.push(team._id)
+    await member.save()
+    if (!updateMemberInTeam)
+      throw new ApiError(500, "failed to add member to team")
+  }
 
   return res.json(new ApiResponse("Team created successfully", team))
 })
@@ -45,11 +56,13 @@ const addMemberToTeam = asyncHandler(async (req, res) => {
 
   const updateMemberInTeam = team.members.push(memberId)
   await team.save()
-  if (!updateMemberInTeam) throw new ApiError(500, "failed to add member to team")
+  if (!updateMemberInTeam)
+    throw new ApiError(500, "failed to add member to team")
 
   const updateMemberInUser = member.teams.push(teamId)
   await member.save()
-  if (!updateMemberInUser) throw new ApiError(500, "failed to add member to user")
+  if (!updateMemberInUser)
+    throw new ApiError(500, "failed to add member to user")
 
   return res
     .status(200)
@@ -73,11 +86,13 @@ const removeMemberFromTeam = asyncHandler(async (req, res) => {
 
   const updateMemberInTeam = team.members.pull(memberId)
   await team.save()
-  if (!updateMemberInTeam) throw new ApiError(500, "failed to remove member from team")
+  if (!updateMemberInTeam)
+    throw new ApiError(500, "failed to remove member from team")
 
   const updateMemberInUser = member.teams.pull(teamId)
   await member.save()
-  if (!updateMemberInUser) throw new ApiError(500, "failed to remove member from user")
+  if (!updateMemberInUser)
+    throw new ApiError(500, "failed to remove member from user")
 
   return res
     .status(200)

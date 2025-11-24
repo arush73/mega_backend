@@ -1,5 +1,8 @@
 import { z } from "zod"
-import { AvailableUserPronouns, AvailableProfileAvailability } from "../constants.js"
+import {
+  AvailableUserPronouns,
+  AvailableProfileAvailability,
+} from "../constants.js"
 
 // MongoDB ObjectId validation (as string ki form me leke)
 const objectIdSchema = z
@@ -14,7 +17,12 @@ const profileValidationSchema = z.object({
   displayName: z.string().trim().optional(),
   pronouns: z.enum(AvailableUserPronouns).optional(), // default mongoose me handle hoga
   title: z.string().trim().optional(),
-  bio: z.string().trim().min(10, "Bio must be at least 10 characters").max(1000, "Bio cannot exceed 1000 characters").optional(),
+  bio: z
+    .string()
+    .trim()
+    .min(10, "Bio must be at least 10 characters")
+    .max(1000, "Bio cannot exceed 1000 characters")
+    .optional(),
 
   // Cohort array
   cohort: z.array(objectIdSchema).optional(),

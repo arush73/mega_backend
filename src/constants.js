@@ -74,30 +74,38 @@ export const ChatEventEnum = Object.freeze({
 
 export const AvailableChatEvents = Object.values(ChatEventEnum)
 
-
 export const UserPronounsEnum = {
-    MALE: "HE/HIM/HIS",
-    FEMALE: "SHE/HER/HERS",
-    NON_BINARY: "THEY/THEM/THEIRS",
+  MALE: "HE/HIM/HIS",
+  FEMALE: "SHE/HER/HERS",
+  NON_BINARY: "THEY/THEM/THEIRS",
 }
 
 export const AvailableUserPronouns = Object.values(UserPronounsEnum)
 
 export const profileAvailabilityEnum = {
-    AVAILABLE: "AVAILABLE",
-    BUSY: "BUSY",
-    MAYBE: "MAYBE",
+  AVAILABLE: "AVAILABLE",
+  BUSY: "BUSY",
+  MAYBE: "MAYBE",
 }
 
-export const AvailableProfileAvailability = Object.values(profileAvailabilityEnum)
+export const AvailableProfileAvailability = Object.values(
+  profileAvailabilityEnum
+)
 
 export const UserProfileSkillsEnum = {
-    REACT: "REACT",
-    NODE: "NODE",
-    PYTHON: "PYTHON",
-    JAVASCRIPT: "JAVASCRIPT",
-    TYPESCRIPT: "TYPESCRIPT",
-    DOCKER:"DOCKER",
+  REACT: "REACT",
+  NODE: "NODE",
+  PYTHON: "PYTHON",
+  JAVASCRIPT: "JAVASCRIPT",
+  TYPESCRIPT: "TYPESCRIPT",
+  DOCKER: "DOCKER",
 }
 
 export const AvailableUserProfileSkills = Object.values(UserProfileSkillsEnum)
+
+const CohortChannelTypeEnum = {
+  VOICE: "VOICE",
+  TEXT: "TEXT",
+}
+
+export const AvailableCohortChannelTypes = Object.values(CohortChannelTypeEnum)

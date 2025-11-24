@@ -70,8 +70,14 @@ const userSchema = new mongoose.Schema(
     },
     cohort: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Cohort",
+        name: {
+          type: String,
+          required: true,
+        },
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Cohort",
+        }
       },
     ],
     teams: [

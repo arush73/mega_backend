@@ -4,7 +4,8 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import { profileValidationSchema } from "../validators/profile.validators.js"
 import { Cohort } from "../models/cohort.models.js"
 import { Profile } from "../models/profile.models.js"
-import {User} from "../models/user.models.js"
+import { User } from "../models/user.models.js"
+import { Team } from "../models/team.models.js"
 
 const addProfile = asyncHandler(async (req, res) => {
   const validate = profileValidationSchema.safeParse(req.body)
@@ -68,8 +69,10 @@ const addProfile = asyncHandler(async (req, res) => {
     avatarUrl,
   })
   if (!profile) throw new ApiError(500, "failed to create profile")
-  
-  const updateUser = await User.findByIdAndUpdate(userId, { profile: profile._id })
+
+  const updateUser = await User.findByIdAndUpdate(userId, {
+    profile: profile._id,
+  })
   if (!updateUser) throw new ApiError(500, "failed to link profile to user")
 
   return res
@@ -183,6 +186,49 @@ const addCohortToProfile = asyncHandler(async (req, res) => {
   // return res.status(201).json(new ApiResponse(201, updatedCohortProfile))
 })
 
+const getInitialUserData = asyncHandler(async (req, res) => {
+  // const user = await User.findById(req.user?._id).select(
+  //   "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
+  // )
+  console.log("reachd the controller to get initial data")
+  const user = await User.findById("6923d70b0aa7f828573b6e12").select(
+    "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
+  )
+  console.log("second time")
+  console.log(user)
+
+  if (!user) {
+    throw new ApiError(404, "User does not exist")
+  }
+
+  console.log("Third time")
+  const cohorts = []
+  for (const cohortId of user.cohort) {
+    const cohort = await Cohort.findById(cohortId)
+    cohorts.push(cohort)
+  }
+  console.log("fourth time")
+
+  const teams = []
+  for (const teamId of user.teams) {
+    const team = await Team.findById(teamId)
+    teams.push(team)
+  }
+  console.log("fifth time")
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        ...user._doc,
+        cohorts,
+        teams,
+      },
+      "User fetched successfully"
+    )
+  )
+})
+
 export {
   addProfile,
   updateProfile,
@@ -190,4 +236,5 @@ export {
   getProfile,
   listProfiles,
   addCohortToProfile,
+  getInitialUserData,
 }

@@ -4,7 +4,7 @@ import { UserRolesEnum } from "../constants.js"
 
 const router = Router()
 
-router.use(verifyJWT)
+// router.use(verifyJWT)
 
 import {
   addProfile,
@@ -13,6 +13,7 @@ import {
   getProfile,
   listProfiles,
   addCohortToProfile,
+  getInitialUserData,
 } from "../controllers/profile.controllers.js"
 
 router.route("/").post(addProfile).get(listProfiles)
@@ -24,5 +25,7 @@ router
 router
   .route("/:profileId/cohort")
   .post(verifyRole(UserRolesEnum.ADMIN), addCohortToProfile)
+
+router.route("/me/:userId").get(getInitialUserData)
 
 export default router
