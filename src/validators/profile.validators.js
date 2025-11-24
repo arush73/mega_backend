@@ -1,25 +1,23 @@
 import { z } from "zod"
-import mongoose from "mongoose"
+import { AvailableUserPronouns, AvailableProfileAvailability } from "../constants.js"
 
-// Helper to validate MongoDB ObjectId
+// MongoDB ObjectId validation (as string ki form me leke)
 const objectIdSchema = z
   .string()
-  .refine((val) => mongoose.Types.ObjectId.isValid(val), {
-    message: "Invalid MongoDB ObjectId",
-  })
+  .regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId format")
 
 const profileValidationSchema = z.object({
-  user: objectIdSchema, // required (from auth or body)
+  user: objectIdSchema, // required
 
   // Basic identity
   fullName: z.string().trim().optional(),
   displayName: z.string().trim().optional(),
-  pronouns: z.string().trim().optional(),
+  pronouns: z.enum(AvailableUserPronouns).optional(), // default mongoose me handle hoga
   title: z.string().trim().optional(),
-  bio: z.string().optional(),
+  bio: z.string().trim().min(10, "Bio must be at least 10 characters").max(1000, "Bio cannot exceed 1000 characters").optional(),
 
-  // Cohort
-  cohort: objectIdSchema.optional(),
+  // Cohort array
+  cohort: z.array(objectIdSchema).optional(),
 
   // Skills and roles
   skills: z.array(z.string()).optional(),
@@ -39,7 +37,7 @@ const profileValidationSchema = z.object({
       z.object({
         name: z.string().optional(),
         description: z.string().optional(),
-        url: z.string().url().optional(),
+        url: z.string().url("Invalid URL").optional(),
         role: z.string().optional(),
       })
     )
@@ -48,10 +46,10 @@ const profileValidationSchema = z.object({
   // Social links
   social: z
     .object({
-      github: z.string().url().optional(),
-      linkedin: z.string().url().optional(),
-      website: z.string().url().optional(),
-      twitter: z.string().url().optional(),
+      github: z.string().trim().optional(),
+      linkedin: z.string().trim().optional(),
+      website: z.string().trim().url("Invalid website URL").optional(),
+      twitter: z.string().trim().optional(),
     })
     .optional(),
 
@@ -59,19 +57,16 @@ const profileValidationSchema = z.object({
   preferences: z
     .object({
       preferredRoles: z.array(z.string()).optional(),
-      preferredTeamSize: z.number().min(1).default(4).optional(),
+      preferredTeamSize: z.number().default(4).optional(),
       willingToLead: z.boolean().default(false).optional(),
     })
     .optional(),
 
   // Availability
-  availability: z
-    .enum(["available", "busy", "maybe"])
-    .default("available")
-    .optional(),
+  availability: z.enum(AvailableProfileAvailability).optional(),
 
   // Presentation
-  avatarUrl: z.string().url().optional(),
+  avatarUrl: z.string().trim().optional(),
 })
 
 export { profileValidationSchema }

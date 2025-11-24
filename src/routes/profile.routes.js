@@ -4,7 +4,7 @@ import { UserRolesEnum } from "../constants.js"
 
 const router = Router()
 
-router.use(verifyJWT)
+// router.use(verifyJWT)
 
 import {
   addProfile,

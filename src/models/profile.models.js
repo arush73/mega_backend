@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import { AvailableUserPronouns, AvailableProfileAvailability } from "../constants.js"
 
 const profileSchema = new mongoose.Schema(
   {
@@ -12,9 +13,9 @@ const profileSchema = new mongoose.Schema(
     // Basic identity
     fullName: { type: String, trim: true },
     displayName: { type: String, trim: true },
-    pronouns: { type: String, trim: true },
+    pronouns: { type: String, enum: AvailableUserPronouns, default: "HE/HIM/HIS" },
     title: { type: String, trim: true },
-    bio: { type: String },
+    bio: { type: String, trim: true, maxLength: 1000, minLength: 10 },
 
     // Cohort / program links
     cohort: [{ type: mongoose.Schema.Types.ObjectId, ref: "Cohort" }],
@@ -39,10 +40,10 @@ const profileSchema = new mongoose.Schema(
 
     // Social / contact links
     social: {
-      github: { type: String },
-      linkedin: { type: String },
-      website: { type: String },
-      twitter: { type: String },
+      github: { type: String, trim: true },
+      linkedin: { type: String, trim: true },
+      website: { type: String, trim: true },
+      twitter: { type: String, trim: true },
     },
 
     // Team-building preferences
@@ -55,14 +56,12 @@ const profileSchema = new mongoose.Schema(
     // Availability / status
     availability: {
       type: String,
-      enum: ["available", "busy", "maybe"],
-      default: "available",
+      enum: AvailableProfileAvailability,
+      default: "AVAILABLE",
     },
 
     // Presentation
-    avatarUrl: { type: String },
-
-    // Add timestamps via schema options (timestamps: true)
+    avatarUrl: { type: String, trim: true },
   },
   { timestamps: true }
 )

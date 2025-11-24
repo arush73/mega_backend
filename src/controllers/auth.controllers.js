@@ -63,16 +63,20 @@ const registerUser = asyncHandler(async (req, res) => {
   const accessToken = user.generateAccessToken()
   const refreshToken = user.generateRefreshToken()
 
-  axios.post(
-    process.env.MAIL_SERVICE_URL +
-      "/verify-email/" +
-      unHashedToken +
+  try {
+    axios.post(
+      process.env.MAIL_SERVICE_URL +
+        "/verify-email/" +
+        unHashedToken +
       "/" +
       process.env.MAIL_SERVICE_TOKEN,
     {
       email: user.email,
     }
-  )
+    )
+  } catch (error) {
+    console.log(error)
+  }
 
   return res
     .status(201)

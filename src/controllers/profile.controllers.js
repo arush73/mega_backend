@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import { profileValidationSchema } from "../validators/profile.validators.js"
 import { Cohort } from "../models/cohort.models.js"
 import { Profile } from "../models/profile.models.js"
+import {User} from "../models/user.models.js"
 
 const addProfile = asyncHandler(async (req, res) => {
   const validate = profileValidationSchema.safeParse(req.body)
@@ -66,6 +67,10 @@ const addProfile = asyncHandler(async (req, res) => {
     availability,
     avatarUrl,
   })
+  if (!profile) throw new ApiError(500, "failed to create profile")
+  
+  const updateUser = await User.findByIdAndUpdate(userId, { profile: profile._id })
+  if (!updateUser) throw new ApiError(500, "failed to link profile to user")
 
   return res
     .status(201)
@@ -174,8 +179,8 @@ const addCohortToProfile = asyncHandler(async (req, res) => {
 
   if (cohort.length === 0) throw new ApiError(404, "cohort is empty")
 
-  const updatedCohortProfile = await Cohort.findByIdAndUpdate(cohortId)
-  return res.status(201).json(new ApiResponse(201, updatedCohortProfile))
+  // const updatedCohortProfile = await Cohort.findByIdAndUpdate(cohortId)
+  // return res.status(201).json(new ApiResponse(201, updatedCohortProfile))
 })
 
 export {
