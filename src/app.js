@@ -95,4 +95,8 @@ app.use("/api/v1/chat-app/messages", messageRouter)
 app.use("/api/v1/cohort", cohortRouter)
 app.use("/api/v1/team", teamRouter)
 
+import { errorHandler } from "./middlewares/error.middlewares.js"
+
+app.use(errorHandler)
+
 export default app

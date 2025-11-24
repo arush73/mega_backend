@@ -14,7 +14,7 @@ const addProfile = asyncHandler(async (req, res) => {
       validate.error.issues.map((m) => m.message)
     )
 
-  const userId = req.user?._id
+  const userId = req.user._id
   if (!userId) {
     throw new ApiError(404, "UserId not found")
   }
@@ -136,7 +136,7 @@ const updateProfile = asyncHandler(async (req, res) => {
 })
 
 const deleteProfile = asyncHandler(async (req, res) => {
-  const profileId = req.params
+  const { profileId } = req.params
   if (!profileId) throw new ApiError(404, "profileId not found in the params")
 
   const deleteProfile = Profile.findByIdAndDelete(profileId)
@@ -148,7 +148,7 @@ const deleteProfile = asyncHandler(async (req, res) => {
 })
 
 const getProfile = asyncHandler(async (req, res) => {
-  const profileId = req.params
+  const { profileId } = req.params
   if (!profileId) throw new ApiError(404, "profileId not found in the params")
 
   const profile = await Profile.findById(profileId)
@@ -168,7 +168,7 @@ const listProfiles = asyncHandler(async (req, res) => {
 })
 
 const addCohortToProfile = asyncHandler(async (req, res) => {
-  const profileId = req.params
+  const { profileId } = req.params
   if (!profileId) throw new ApiError(404, "profileId not found in the params")
 
   const profile = await Profile.findById(profileId)

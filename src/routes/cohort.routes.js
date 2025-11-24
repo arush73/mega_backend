@@ -4,8 +4,8 @@ import { UserRolesEnum } from "../constants.js"
 
 const router = Router()
 
-// router.use(verifyJWT)
-// router.use(verifyRole(UserRolesEnum.ADMIN))
+router.use(verifyJWT)
+router.use(verifyRole(UserRolesEnum.ADMIN))
 
 import {
   addCohort,
