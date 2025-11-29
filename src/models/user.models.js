@@ -77,7 +77,7 @@ const userSchema = new mongoose.Schema(
         id: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Cohort",
-        }
+        },
       },
     ],
     teams: [
