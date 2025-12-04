@@ -168,22 +168,18 @@ const removeAnyMemberFromAnyTeam = asyncHandler(async (req, res) => {
     throw new ApiError(400, "teamId or memberId is missing from req body");
   }
 
-  // 1. Get team
   const team = await Team.findById(teamId);
   if (!team) throw new ApiError(404, "Team not found");
 
-  // 2. Check if member exists in team
   const memberExists = team.members.includes(memberId);
   if (!memberExists) {
     throw new ApiError(400, "This member is not in the team");
   }
 
-  // 3. Remove member from array
   team.members = team.members.filter(
     (m) => m.toString() !== memberId.toString()
   );
 
-  // 4. Save team
   await team.save();
 
   return res.status(200).json({
