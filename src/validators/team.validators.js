@@ -1,25 +1,26 @@
 import { z } from "zod"
-import mongoose from "mongoose"
 
-// Helper to validate MongoDB ObjectId
-const objectIdSchema = z
+const objectId = z
   .string()
-  .refine((id) => mongoose.Types.ObjectId.isValid(id), {
-    message: "Invalid ObjectId format",
-  })
+  .regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId format")
 
 const teamValidationSchema = z.object({
-  name: z.string().trim().min(1, "Team name is required"),
+  name: z
+    .string({
+      required_error: "Team name is required",
+    })
+    .trim()
+    .min(1, "Team name cannot be empty"),
 
-  members: z.array(objectIdSchema).optional(),
+  admin: z.array(objectId).min(1, "Admin is required"), // required admin
 
-  admin: objectIdSchema, // required
+  members: z.array(objectId).optional().default([]),
 
-  leaders: z.array(objectIdSchema).optional(),
+  leaders: z.array(objectId).optional().default([]),
 
   description: z.string().trim().optional(),
 
-  projects: z.array(objectIdSchema).optional(),
+  projects: z.array(objectId).optional().default([]),
 })
 
 export { teamValidationSchema }

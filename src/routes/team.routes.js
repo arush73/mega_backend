@@ -4,18 +4,17 @@ import { UserRolesEnum } from "../constants.js"
 
 const router = Router()
 
-router.use(verifyJWT)
-router.use(verifyRole(UserRolesEnum.ADMIN))
+// router.use(verifyJWT)
+// router.use(verifyRole(UserRolesEnum.ADMIN))
 
 import {
-  getTeams,
   createTeam,
   addMemberToTeam,
   removeMemberFromTeam,
   deleteTeam,
 } from "../controllers/team.controllers.js"
 
-router.route("/").get(getTeams).post(createTeam)
+router.route("/").post(createTeam)
 router
   .route("/:teamId")
   .put(addMemberToTeam)

@@ -14,11 +14,13 @@ const teamSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
-    admin: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    admin: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
     leaders: [
       {
         type: mongoose.Schema.Types.ObjectId,

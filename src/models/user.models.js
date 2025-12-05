@@ -82,8 +82,14 @@ const userSchema = new mongoose.Schema(
     ],
     teams: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Team",
+        name: {
+          type: String,
+          required: true,
+        },
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Team",
+        },
       },
     ],
   },
