@@ -16,6 +16,9 @@ const createTeam = asyncHandler(async (req, res) => {
     )
   }
 
+  // more checks to be added !!!
+  // like checking whether all admin is present in members or not duplicate members should not be there and stuff
+
   // 2) Destructure & normalise
   const { name, description, admin, members = [], leaders = [] } = parsed.data
 
@@ -49,17 +52,17 @@ const createTeam = asyncHandler(async (req, res) => {
   if (memberIds.length) {
     await User.updateMany(
       { _id: { $in: memberIds } },
-      { $addToSet: { teams: team._id } } // adjust `teams` if your user schema uses different field
+      { $addToSet: { teams: { name: team.name, id: team._id } } } // adjust `teams` if your user schema uses different field
     )
   }
 
   // 6) Also ensure leaders have the team ref (if leaders are separate)
-  if (leaderIds.length) {
-    await User.updateMany(
-      { _id: { $in: leaderIds } },
-      { $addToSet: { teams: team._id } }
-    )
-  }
+  // if (leaderIds.length) {
+  //   await User.updateMany(
+  //     { _id: { $in: leaderIds } },
+  //     { $addToSet: { teams: team._id } }
+  //   )
+  // }
 
   // 7) Return created team (optionally populated)
   const populated = await Team.findById(team._id)
@@ -220,6 +223,31 @@ const createTeam = asyncHandler(async (req, res) => {
 //   }
 // })
 
+const deleteTeam = asyncHandler(async (req, res) => {
+  const { teamId } = req.params
+
+  const deleteTeam = await Team.findByIdAndDelete(teamId)
+  if (!deleteTeam) throw new ApiError(500, "failed to delete team")
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, `Team ${teamId} deleted successfully`))
+})
+
+const getTeamsForUser = asyncHandler(async (req, res) => {
+  //logic to get teams will have to think about it
+  const userId = req.user._id
+
+  const teams = await Team.find({
+    user: userId,
+  })
+  if (!teams) throw new ApiError(500, "Failed to get the teams")
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, teams, "Teams fetched successfully"))
+})
+
 const addMemberToTeam = asyncHandler(async (req, res) => {
   const { teamId, memberId } = req.params
 
@@ -278,31 +306,6 @@ const removeMemberFromTeam = asyncHandler(async (req, res) => {
         `Member ${memberId} removed from team ${teamId} successfully`
       )
     )
-})
-
-const deleteTeam = asyncHandler(async (req, res) => {
-  const { teamId } = req.params
-
-  const deleteTeam = await Team.findByIdAndDelete(teamId)
-  if (!deleteTeam) throw new ApiError(500, "failed to delete team")
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, {}, `Team ${teamId} deleted successfully`))
-})
-
-const getTeamsForUser = asyncHandler(async (req, res) => {
-  //logic to get teams will have to think about it
-  const userId = req.user._id
-
-  const teams = await Team.find({
-    user: userId,
-  })
-  if (!teams) throw new ApiError(500, "Failed to get the teams")
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, teams, "Teams fetched successfully"))
 })
 
 // will return all the teams that are there in the dataabase

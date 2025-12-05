@@ -74,6 +74,14 @@ export const ChatEventEnum = Object.freeze({
 
 export const AvailableChatEvents = Object.values(ChatEventEnum)
 
+export const ChatTypeEnum = {
+  ONE_ON_ONE: "ONE_ON_ONE",
+  TEAM: "TEAM",
+  COHORT: "COHORT",
+}
+
+export const AvailableChatTypes = Object.values(ChatTypeEnum)
+
 export const UserPronounsEnum = {
   MALE: "HE/HIM/HIS",
   FEMALE: "SHE/HER/HERS",

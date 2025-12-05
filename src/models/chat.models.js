@@ -1,7 +1,13 @@
 import mongoose from "mongoose"
+import { AvailableChatTypes } from "../constants.js"
 
 const chatSchema = new mongoose.Schema(
   {
+    chatType: {
+      type: String,
+      enum: AvailableChatTypes,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
