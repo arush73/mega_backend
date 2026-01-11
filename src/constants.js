@@ -82,6 +82,13 @@ export const ChatTypeEnum = {
 
 export const AvailableChatTypes = Object.values(ChatTypeEnum)
 
+export const ChannelTypeEnum = {
+  TEXT: "TEXT",
+  VOICE: "VOICE",
+}
+
+export const AvailableChannelTypes = Object.values(ChannelTypeEnum)
+
 export const UserPronounsEnum = {
   MALE: "HE/HIM/HIS",
   FEMALE: "SHE/HER/HERS",

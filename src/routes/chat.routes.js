@@ -15,6 +15,7 @@ import {
   removeParticipantFromGroupChat,
   renameGroupChat,
   searchAvailableUsers,
+  addChannelToChat,
 } from "../controllers/chat.controllers.js"
 
 router.use(verifyJWT)
@@ -41,5 +42,7 @@ router
 router.route("/leave/group/:chatId").delete(leaveGroupChat)
 
 router.route("/remove/:chatId").delete(deleteOneOnOneChat)
+
+router.route("/add-channel/:chatId").post(addChannelToChat)
 
 export default router

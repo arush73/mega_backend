@@ -1,5 +1,17 @@
 import mongoose from "mongoose"
-import { AvailableChatTypes } from "../constants.js"
+import { AvailableChannelTypes, AvailableChatTypes } from "../constants.js"
+
+const channelSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    type: {
+        type: String,
+        enum: AvailableChannelTypes,
+        required: true,
+    },
+})
 
 const chatSchema = new mongoose.Schema(
   {
@@ -8,6 +20,12 @@ const chatSchema = new mongoose.Schema(
       enum: AvailableChatTypes,
       required: true,
     },
+    channels: [
+      {
+        type: channelSchema,
+        required: true,
+      },
+    ],
     name: {
       type: String,
       required: true,

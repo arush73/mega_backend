@@ -6,6 +6,7 @@ import { Message } from "../models/message.models.js"
 import { emitSocketEvent } from "../socket/index.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
+import { AvailableChannelTypes } from "../constants.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 
 /**
@@ -632,6 +633,48 @@ const getAllChats = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, chats || [], "User chats fetched successfully!"))
 })
 
+const addChannelToChat = asyncHandler(async (req, res) => {
+  const userId = req.user?._id
+  if(!userId){
+    throw new ApiError(401, "Unauthorized")
+  }
+
+  if(req.user.role !== "ADMIN"){
+    throw new ApiError(401, "Unauthorized")
+  }
+
+  const { chatId } = req.params
+  if(!chatId){
+    throw new ApiError(400, "Chat id is required")
+  }
+
+  const { channelName, channelType } = req.body
+  if(!channelName || !channelType){
+    throw new ApiError(400, "Channel name and type are required")
+  }
+
+  if(channelType !== AvailableChannelTypes.TEXT && channelType !== AvailableChannelTypes.VOICE){
+    throw new ApiError(400, "Invalid channel type")
+  }
+
+  const chat = await Chat.findById(chatId)
+
+  if(!chat){
+    throw new ApiError(404, "Chat not found")
+  }
+
+  chat.channels.push({
+    name: channelName,
+    type: channelType,
+  })
+
+  await chat.save()
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, chat, "Channel added successfully"))
+})
+
 export {
   addNewParticipantInGroupChat,
   createAGroupChat,
@@ -644,4 +687,5 @@ export {
   removeParticipantFromGroupChat,
   renameGroupChat,
   searchAvailableUsers,
+  addChannelToChat,
 }
